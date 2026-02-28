@@ -22,12 +22,22 @@ export default defineConfig({
           entryGlobalName: 'login_app',
           shareScope: 'default',
         },
+        dashboard_app: {
+          type: 'module',
+          name: 'dashboard_app',
+          entry: 'http://localhost:3004/remoteEntry.js',
+          entryGlobalName: 'dashboard_app',
+          shareScope: 'default',
+        },
       },
       shared: {
         react: { singleton: true, requiredVersion: '^19.0.0' },
         'react-dom': { singleton: true, requiredVersion: '^19.0.0' },
         'react/jsx-runtime': { singleton: true, requiredVersion: '^19.0.0' },
-        'react/jsx-dev-runtime': { singleton: true, requiredVersion: '^19.0.0' },
+        'react/jsx-dev-runtime': {
+          singleton: true,
+          requiredVersion: '^19.0.0',
+        },
         '@mui/material': { singleton: true },
         '@emotion/react': { singleton: true },
         '@emotion/styled': { singleton: true },
