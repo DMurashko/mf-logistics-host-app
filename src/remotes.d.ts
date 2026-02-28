@@ -9,15 +9,18 @@ declare module 'login_app/RegisterPage' {
 }
 
 declare module 'login_app/auth' {
-  import type { FC, PropsWithChildren } from 'react';
   export const useAuth: () => { isAuthenticated: boolean };
-  export const AuthService: {
-    isAuthenticated: boolean;
-    login: (username: string, password: string) => Promise<void>;
-    logout: () => void;
-  };
-  export const UserAuthenticated: FC<PropsWithChildren>;
-  export const UserNotAuthenticated: FC<PropsWithChildren>;
+  export class AuthService {
+    static get isAuthenticated(): boolean;
+    static getAccessToken(): string | null;
+    static getRefreshToken(): string | null;
+    static setTokens(accessToken: string, refreshToken: string): void;
+    static clearTokens(): void;
+  }
+  export enum StorageKey {
+    ACCESS_TOKEN = 'accessToken',
+    REFRESH_TOKEN = 'refreshToken',
+  }
 }
 
 declare module 'dashboard_app/Dashboard' {
