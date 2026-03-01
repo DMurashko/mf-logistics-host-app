@@ -43,6 +43,7 @@ export default defineConfig({
         '@emotion/styled': { singleton: true },
         '@tanstack/react-query': { singleton: true },
         'react-router-dom': { singleton: true },
+        '@mui/x-data-grid': { singleton: true },
       },
     }),
     react(),

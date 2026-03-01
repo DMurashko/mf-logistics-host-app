@@ -33,6 +33,28 @@ declare module 'ui_library/Theme' {
   export const ThemeProvider: React.ComponentType<{ children: ReactNode }>;
 }
 
+declare module 'ui_library/Header' {
+  import type { FC } from 'react';
+  export interface HeaderProps {
+    onLogout: () => void;
+    title?: string;
+  }
+  export const Header: FC<HeaderProps>;
+}
+
+declare module 'ui_library/DataGrid' {
+  export {
+    DataGrid,
+    type DataGridProps,
+    type GridColDef,
+    type GridRowParams,
+    type GridPaginationModel,
+    type GridRowSelectionModel,
+    type GridRenderCellParams,
+    type GridSlots,
+  } from '@mui/x-data-grid';
+}
+
 declare module 'ui_library/*' {
   import type { FC } from 'react';
   const Component: FC;
