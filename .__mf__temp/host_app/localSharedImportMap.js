@@ -191,6 +191,14 @@
                   entry: "http://localhost:3003/remoteEntry.js",
                   shareScope: "default",
                 }
+          ,
+                {
+                  entryGlobalName: "login_app",
+                  name: "login_app",
+                  type: "module",
+                  entry: "http://localhost:3001/remoteEntry.js",
+                  shareScope: "default",
+                }
           
       ]
       export {

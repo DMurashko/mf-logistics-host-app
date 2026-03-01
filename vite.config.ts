@@ -44,6 +44,7 @@ export default defineConfig({
         '@tanstack/react-query': { singleton: true },
         'react-router-dom': { singleton: true },
         '@mui/x-data-grid': { singleton: true },
+        axios: { singleton: true },
       },
     }),
     react(),

@@ -23,6 +23,29 @@ declare module 'login_app/auth' {
   }
 }
 
+declare module 'login_app/api' {
+  import type { AxiosInstance } from 'axios';
+
+  export const apiAxiosInstance: AxiosInstance;
+
+  export interface IRefreshService {
+    interceptReq(): void;
+    interceptRes(): void;
+  }
+
+  export class RefreshTokenService implements IRefreshService {
+    static initialize(axiosInstance: AxiosInstance): RefreshTokenService;
+    static getInstance(): RefreshTokenService | null;
+    interceptReq(): void;
+    interceptRes(): void;
+    destroy(): void;
+  }
+
+  export class InvalidRefreshTokenError extends Error {
+    constructor(message?: string);
+  }
+}
+
 declare module 'dashboard_app/Dashboard' {
   import React from 'react';
   export const Dashboard: React.ComponentType;
