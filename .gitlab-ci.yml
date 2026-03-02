@@ -1,0 +1,74 @@
+stages:
+  - check
+  - build
+
+variables:
+  REGISTRY: rg.fr-par.scw.cloud
+  NAMESPACE: logistics-test-app
+  IMAGE_NAME: host-app
+  IMAGE: ${REGISTRY}/${NAMESPACE}/${IMAGE_NAME}
+
+# ── MR pipeline ───────────────────────────────────────────────────────
+lint:
+  stage: check
+  image: node:20-alpine
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  before_script:
+    - corepack enable && corepack prepare pnpm@latest --activate
+    - pnpm install --frozen-lockfile
+  script:
+    - pnpm run lint
+
+test:
+  stage: check
+  image: node:20-alpine
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  before_script:
+    - corepack enable && corepack prepare pnpm@latest --activate
+    - pnpm install --frozen-lockfile
+  script:
+    - pnpm run test:cov
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+
+build:
+  stage: build
+  image: node:20-alpine
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  before_script:
+    - corepack enable && corepack prepare pnpm@latest --activate
+    - pnpm install --frozen-lockfile
+  script:
+    - pnpm run build
+
+# ── Build & push on main ──────────────────────────────────────────────
+build-and-push:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  script:
+    - DATE_TAG=$(date -u +"%Y%m%d-%H%M%S")
+    - SHORT_SHA=$(echo $CI_COMMIT_SHA | cut -c1-7)
+    - mkdir -p /kaniko/.docker
+    - >-
+      echo "{\"auths\":{\"${REGISTRY}\":{\"username\":\"nologin\",\"password\":\"${SCW_SECRET_KEY}\"}}}"
+      > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context=$CI_PROJECT_DIR
+      --dockerfile=$CI_PROJECT_DIR/Dockerfile
+      --destination=${IMAGE}:latest
+      --destination=${IMAGE}:${CI_COMMIT_SHA}
+      --destination=${IMAGE}:${DATE_TAG}-${SHORT_SHA}
+      --cache=true
+      --cache-repo=${IMAGE}/cache

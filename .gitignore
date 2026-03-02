@@ -13,6 +13,9 @@ dist-ssr
 *.local
 .pnpm-store
 
+coverage
+.__mf__temp
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
